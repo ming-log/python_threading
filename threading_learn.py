@@ -1,7 +1,6 @@
 import threading
-from threading import Lock,Thread
-import time,os
-
+import time, os
+"""所谓多线程并不是多个线程一起运行，而是省去了程序进行存储所花费的时间，GIL在不同的线程直接反复横跳，当作用的线程进入I/O（即输入、输出）时，立即进行下一个线程的运算"""
 
 '''
                                       python多线程详解
@@ -45,8 +44,8 @@ import time,os
 #     time.sleep(1)
 #
 # if __name__ == '__main__':
-#     t1 = threading.Thread(target=run,args=('t1',))     # target是要执行的函数名（不是函数），args是函数对应的参数，以元组的形式存在
-#     t2 = threading.Thread(target=run,args=('t2',))
+#     t1 = threading.Thread(target=run, args=('t1',))     # target是要执行的函数名（不是函数），args是函数对应的参数，以元组的形式存在
+#     t2 = threading.Thread(target=run, args=('t2',))
 #     t1.start()
 #     t2.start()
 
@@ -83,7 +82,7 @@ import time,os
     所谓’线程守护’，就是主线程不管该线程的执行情况，只要是其他子线程结束且主线程执行完毕，主线程都会关闭。也就是说:主线程不等待该守护线程的执行完再去关闭。
 '''
 # def run(n):
-#     print('task',n)
+#     print('task', n)
 #     time.sleep(1)
 #     print('3s')
 #     time.sleep(1)
@@ -92,7 +91,7 @@ import time,os
 #     print('1s')
 #
 # if __name__ == '__main__':
-#     t=threading.Thread(target=run,args=('t1',))
+#     t = threading.Thread(target=run, args=('t1',))
 #     t.setDaemon(True)
 #     t.start()
 #     print('end')
@@ -112,11 +111,12 @@ import time,os
 #     print('3s')
 #     time.sleep(2)
 #     print('1s')
+#
 # if __name__ == '__main__':
-#     t=threading.Thread(target=run,args=('t1',))
-#     t.setDaemon(True)    #把子线程设置为守护线程，必须在start()之前设置
+#     t = threading.Thread(target=run, args=('t1',))
+#     t.setDaemon(True)       #把子线程设置为守护线程，必须在start()之前设置
 #     t.start()
-#     t.join()     #设置主线程等待子线程结束
+#     t.join()                #设置主线程等待子线程结束
 #     print('end')
 
 
@@ -126,9 +126,9 @@ import time,os
 '''
 # g_num = 100
 # def work1():
-#     global  g_num
+#     global g_num
 #     for i in range(3):
-#         g_num+=1
+#         g_num += 1
 #     print('in work1 g_num is : %d' % g_num)
 #
 # def work2():
@@ -139,42 +139,44 @@ import time,os
 #     t1 = threading.Thread(target=work1)
 #     t1.start()
 #     time.sleep(1)
-#     t2=threading.Thread(target=work2)
+#     t2 = threading.Thread(target=work2)
 #     t2.start()
 
-
-'''
-        由于线程之间是进行随机调度，并且每个线程可能只执行n条执行之后，当多个线程同时修改同一条数据时可能会出现脏数据，
-    所以出现了线程锁，即同一时刻允许一个线程执行操作。线程锁用于锁定资源，可以定义多个锁，像下面的代码，当需要独占
-    某一个资源时，任何一个锁都可以锁定这个资源，就好比你用不同的锁都可以把这个相同的门锁住一样。
-        由于线程之间是进行随机调度的，如果有多个线程同时操作一个对象，如果没有很好地保护该对象，会造成程序结果的不可预期，
-    我们因此也称为“线程不安全”。
-        为了防止上面情况的发生，就出现了互斥锁（Lock）
-'''
+#
+# '''
+#         由于线程之间是进行随机调度，并且每个线程可能只执行n条执行之后，当多个线程同时修改同一条数据时可能会出现脏数据，
+#     所以出现了线程锁，即同一时刻允许一个线程执行操作。线程锁用于锁定资源，可以定义多个锁，像下面的代码，当需要独占
+#     某一个资源时，任何一个锁都可以锁定这个资源，就好比你用不同的锁都可以把这个相同的门锁住一样。
+#         由于线程之间是进行随机调度的，如果有多个线程同时操作一个对象，如果没有很好地保护该对象，会造成程序结果的不可预期，
+#     我们因此也称为“线程不安全”。
+#         为了防止上面情况的发生，就出现了互斥锁（Lock）
+# '''
 # def work():
-#     global n
+#     global n, lock
 #     lock.acquire()
 #     temp = n
 #     time.sleep(0.1)
 #     n = temp-1
+#     print(n)
 #     lock.release()
 #
 #
+#
 # if __name__ == '__main__':
-#     lock = Lock()
+#     lock = threading.Lock()
 #     n = 100
 #     l = []
 #     for i in range(100):
-#         p = Thread(target=work)
+#         p = threading.Thread(target=work)
 #         l.append(p)
 #         p.start()
-#     for p in l:
-#         p.join()
+#     [p.join() for p in l]
 
-
-'''
-    递归锁：RLcok类的用法和Lock类一模一样，但它支持嵌套，在多个锁没有释放的时候一般会使用RLock类
-'''
+#
+#
+# '''
+#     递归锁：RLcok类的用法和Lock类一模一样，但它支持嵌套，在多个锁没有释放的时候一般会使用RLock类
+# '''
 # def func(lock):
 #     global gl_num
 #     lock.acquire()
@@ -190,13 +192,13 @@ import time,os
 #     for i in range(10):
 #         t = threading.Thread(target=func,args=(lock,))
 #         t.start()
-
-
-'''
-    信号量（BoundedSemaphore类）
-    互斥锁同时只允许一个线程更改数据，而Semaphore是同时允许一定数量的线程更改数据，比如厕所有3个坑，
-    那最多只允许3个人上厕所，后面的人只能等里面有人出来了才能再进去
-'''
+# #
+#
+# '''
+#     信号量（BoundedSemaphore类）
+#     互斥锁同时只允许一个线程更改数据，而Semaphore是同时允许一定数量的线程更改数据，比如厕所有3个坑，
+#     那最多只允许3个人上厕所，后面的人只能等里面有人出来了才能再进去
+# '''
 # def run(n,semaphore):
 #     semaphore.acquire()   #加锁
 #     time.sleep(3)
@@ -254,12 +256,12 @@ def car(name):
 
 
 # startTime = time.time()
-light = threading.Thread(target=lighter,)
+light = threading.Thread(target=lighter, )
 light.start()
 
-car = threading.Thread(target=car,args=('MINT',))
+car = threading.Thread(target=car, args=('MINT',))
 car.start()
-endTime = time.time()
+# endTime = time.time()
 # print('用时：',endTime-startTime)
 
 '''
