@@ -6,14 +6,14 @@ import time
 from queue import Queue
 
 def thread_job():
-    print("T1 start\n")
+    print("T1 start")
     for i in range(10):
         time.sleep(0.1)
-    print("T1finsh\n")
+    print("T1 finsh")
 
 def T2_job():
-    print("T2 start\n")
-    print("T2 end\n")
+    print("T2 start")
+    print("T2 end")
 
 def main():
     # 创建一个线程他的工作是thread_job, 线程的名字是T1
@@ -26,7 +26,7 @@ def main():
     added_thread.join()
     thread2.join()
 
-    print("all done\n")
+    print("all done")
 
 if __name__ == '__main__':
     main()
@@ -127,3 +127,5 @@ if __name__ == '__main__':
     t2.start()
     t1.join()
     t2.join()
+
+
