@@ -4,9 +4,9 @@
 # time: 2020/7/28 11:03
 
 from threading import Thread
-from queue import Queue
 
-class myThread(Thread):
+
+class MyThread(Thread):
     def __init__(self, target_new):
         super().__init__(target=target_new)
         self.v = 11
@@ -25,9 +25,10 @@ class myThread(Thread):
 def main():
     print(1)
 
-t = myThread(main)
+t = MyThread(main)
 t.start()
 t.target_new()
+
 
 class Person():
     def __init__(self,name,age):

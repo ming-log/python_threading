@@ -8,14 +8,15 @@ import threading
 from queue import Queue
 
 
-def file_download(url, type='content'):
+def file_download(url, type_='content'):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko'
     }
     r = requests.get(url, headers=headers)
-    if type == 'text':
+    if type_ == 'text':
         return r.text
     return r.content
+
 
 class DownLoadExecutioner(threading.Thread):
     def __init__(self):
@@ -47,30 +48,3 @@ class DownLoadExecutioner(threading.Thread):
                 f.write(content)
                 self.index += 1
                 print(save_name + "下载成功!  当前已下载图片总数：" + str(self.index))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
