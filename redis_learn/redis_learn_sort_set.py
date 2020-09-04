@@ -10,18 +10,18 @@ pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
 r = redis.Redis(connection_pool=pool)
 
 # 1.zadd(name, *args, **kwargs)  新增
-r.zadd("zset1", {'n1':11, 'n2':22})
-r.zadd("zset2", {'m1':22, 'm2':44})
-print(r.zcard("zset1")) # 集合长度
-print(r.zcard("zset2")) # 集合长度
+r.zadd("zset1", {'n1': 11, 'n2': 22})
+r.zadd("zset2", {'m1': 22, 'm2': 44})
+print(r.zcard("zset1"))  # 集合长度
+print(r.zcard("zset2"))  # 集合长度
 print(r.zrange("zset1", 0, -1))   # 获取有序集合中所有元素
 print(r.zrange("zset2", 0, -1, withscores=True))   # 获取有序集合中所有元素和分数
 
 
-#2. zcard(name)    获取有序集合元素个数 类似于len
-print(r.zcard("zset1")) # 集合长度
+# 2. zcard(name)    获取有序集合元素个数 类似于len
+print(r.zcard("zset1"))  # 集合长度
 
-#3. r.zrange( name, start, end, desc=False, withscores=False, score_cast_func=float)    获取有序集合的所有元素
+# 3. r.zrange( name, start, end, desc=False, withscores=False, score_cast_func=float)    获取有序集合的所有元素
 # 按照索引范围获取name对应的有序集合的元素
 # 参数：
 # name - redis的name
@@ -31,29 +31,32 @@ print(r.zcard("zset1")) # 集合长度
 # withscores - 是否获取元素的分数，默认只获取元素的值
 # score_cast_func - 对分数进行数据转换的函数
 
-# 3-1 zrevrange(name, start, end, withscores=False, score_cast_func=float)    从大到小排序(同zrange，集合是从大到小排序的)
+# 3-1 zrevrange(name, start, end, withscores=False, score_cast_func=float)
+# 从大到小排序(同zrange，集合是从大到小排序的)
 print(r.zrevrange("zset1", 0, -1))    # 只获取元素，不显示分数
-print(r.zrevrange("zset1", 0, -1, withscores=True)) # 获取有序集合中所有元素和分数,分数倒序
+print(r.zrevrange("zset1", 0, -1, withscores=True))  # 获取有序集合中所有元素和分数,分数倒序
 
-# 3-2 zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=float)    按照分数范围获取name对应的有序集合的元素
+# 3-2 zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=float)
+# 按照分数范围获取name对应的有序集合的元素
 for i in range(1, 30):
    element = 'n' + str(i)
    r.zadd("zset3", element, i)
-print(r.zrangebyscore("zset3", 15, 25)) # # 在分数是15-25之间，取出符合条件的元素
+print(r.zrangebyscore("zset3", 15, 25))  # # 在分数是15-25之间，取出符合条件的元素
 print(r.zrangebyscore("zset3", 12, 22, withscores=True))    # 在分数是12-22之间，取出符合条件的元素（带分数）
 
-# 3-3 zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=float)    按照分数范围获取有序集合的元素并排序（默认从大到小排序）
-print(r.zrevrangebyscore("zset3", 22, 11, withscores=True)) # 在分数是22-11之间，取出符合条件的元素 按照
+# 3-3 zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=float)
+# 按照分数范围获取有序集合的元素并排序（默认从大到小排序）
+print(r.zrevrangebyscore("zset3", 22, 11, withscores=True))  # 在分数是22-11之间，取出符合条件的元素 按照
 
 # 3-4 zscan(name, cursor=0, match=None, count=None, score_cast_func=float)    获取所有元素--默认按照分数顺序排序
 print(r.zscan("zset3"))
 
 # 3-5 zscan_iter(name, match=None, count=None,score_cast_func=float)    获取所有元素--迭代器
-for i in r.zscan_iter("zset3"): # 遍历迭代器
+for i in r.zscan_iter("zset3"):  # 遍历迭代器
     print(i)
 
 
-# 4.zcount(name, min, max)   获取name对应的有序集合中分数 在 [min,max] 之间的个数
+# 4. zcount(name, min, max)   获取name对应的有序集合中分数 在 [min,max] 之间的个数
 print(r.zrange("zset3", 0, -1, withscores=True))
 print(r.zcount("zset3", 11, 22))
 

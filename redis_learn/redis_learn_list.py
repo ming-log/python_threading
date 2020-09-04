@@ -3,8 +3,8 @@
 # author: Ming Luo
 # time: 2020/7/31 15:54
 import redis
-import time
-#1.lpush(name,values)   增加（类似于list的append，只是这里是从左边新增加）--没有就新建
+
+# 1.lpush(name,values)   增加（类似于list的append，只是这里是从左边新增加）--没有就新建
 pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)
 r = redis.Redis(connection_pool=pool)
 
@@ -15,25 +15,25 @@ r.rpush("list2", 11, 22, 33)  # 表示从右向左操作
 print(r.llen("list2"))  # 列表长度
 print(r.lrange("list2", 0, 3))  # 切片取出值，范围是索引号0-3
 
-#2.rpush(name,values)   增加（从右边增加）--没有就新建
+# 2.rpush(name,values)   增加（从右边增加）--没有就新建
 r.rpush("list2", 44, 55, 66)    # 在列表的右边，依次添加44,55,66
 print(r.llen("list2"))  # 列表长度
-print(r.lrange("list2", 0, -1)) # 切片取出值，范围是索引号0到-1(最后一个元素)
+print(r.lrange("list2", 0, -1))  # 切片取出值，范围是索引号0到-1(最后一个元素)
 
-#3.lpushx(name,value)    往已经有的name的列表的左边添加元素，没有的话无法创建
+# 3.lpushx(name,value)    往已经有的name的列表的左边添加元素，没有的话无法创建
 r.lpushx("list10", 10)   # 这里list10不存在
 print(r.llen("list10"))  # 0
 print(r.lrange("list10", 0, -1))  # []
 r.lpushx("list2", 77)   # 这里"list2"之前已经存在，往列表最左边添加一个元素，一次只能添加一个
 print(r.llen("list2"))  # 列表长度
-print(r.lrange("list2", 0, -1)) # 切片取出值，范围是索引号0到-1(最后一个元素
+print(r.lrange("list2", 0, -1))  # 切片取出值，范围是索引号0到-1(最后一个元素
 
-#4.rpushx(name,value)   往已经有的name的列表的右边添加元素，没有的话无法创建
+# 4.rpushx(name,value)   往已经有的name的列表的右边添加元素，没有的话无法创建
 r.rpushx("list2", 99)   # 这里"foo_list1"之前已经存在，往列表最右边添加一个元素，一次只能添加一个
 print(r.llen("list2"))  # 列表长度
-print(r.lrange("list2", 0, -1)) # 切片取出值，范围是索引号0到-1(最后一个元素)
+print(r.lrange("list2", 0, -1))  # 切片取出值，范围是索引号0到-1(最后一个元素)
 
-#5.linsert(name, where, refvalue, value))    新增（固定索引号位置插入元素）
+# 5.linsert(name, where, refvalue, value))    新增（固定索引号位置插入元素）
 # 在name对应的列表的某一个值前或后插入一个新值
 # 参数：
 # name - redis的name
@@ -43,7 +43,7 @@ print(r.lrange("list2", 0, -1)) # 切片取出值，范围是索引号0到-1(最
 r.linsert("list2", "before", "11", "00")   # 往列表中左边第一个出现的元素"11"前插入元素"00"
 print(r.lrange("list2", 0, -1))   # 切片取出值，范围是索引号0-最后一个元素
 
-#6.r.lset(name, index, value)     修改（指定索引号进行修改）
+# 6.r.lset(name, index, value)     修改（指定索引号进行修改）
 # 对name对应的list中的某一个索引位置重新赋值
 # 参数：
 # name - redis的name
@@ -52,7 +52,7 @@ print(r.lrange("list2", 0, -1))   # 切片取出值，范围是索引号0-最后
 r.lset("list2", 0, -11)    # 把索引号是0的元素修改成-11
 print(r.lrange("list2", 0, -1))
 
-#7.r.lrem(name, value, num)    删除（指定值进行删除）
+# 7.r.lrem(name, value, num)    删除（指定值进行删除）
 # 在name对应的list中删除指定的值
 # 参数：
 # name - redis的name
@@ -67,13 +67,13 @@ print(r.lrange("list2", 0, -1))
 r.lrem("list2", "22", 0)    # 将列表中所有的"22"删除
 print(r.lrange("list2", 0, -1))
 
-#8. lpop(name)      删除并返回
+# 8. lpop(name)      删除并返回
 r.lpop("list2")    # 删除列表最左边的元素，并且返回删除的元素
 print(r.lrange("list2", 0, -1))
 r.rpop("list2")    # 删除列表最右边的元素，并且返回删除的元素
 print(r.lrange("list2", 0, -1))
 
-#9. ltrim(name, start, end)     删除索引之外的值
+# 9. ltrim(name, start, end)     删除索引之外的值
 # 在name对应的列表中移除没有在start-end索引之间的值
 # 参数：
 # name - redis的name
@@ -82,11 +82,11 @@ print(r.lrange("list2", 0, -1))
 r.ltrim("list2", 0, 2)    # 删除索引号是0-2之外的元素，值保留索引号是0-2的元素
 print(r.lrange("list2", 0, -1))
 
-#10. lindex(name, index)      取值（根据索引号取值）
+# 10. lindex(name, index)      取值（根据索引号取值）
 # 在name对应的列表中根据索引获取列表元素
 print(r.lindex("list2", 0))  # 取出索引号是0的值
 
-#11. rpoplpush(src, dst)     移动 元素从一个列表移动到另外一个列表
+# 11. rpoplpush(src, dst)     移动 元素从一个列表移动到另外一个列表
 # 从一个列表取出最右边的元素，同时将其添加至另一个列表的最左边
 # 参数：
 # src - 要取数据的列表的 name
@@ -94,7 +94,7 @@ print(r.lindex("list2", 0))  # 取出索引号是0的值
 r.rpoplpush("list1", "list2")
 print(r.lrange("list2", 0, -1))
 
-#12. brpoplpush(src, dst, timeout=0)     移动 元素从一个列表移动到另外一个列表 可以设置超时
+# 12. brpoplpush(src, dst, timeout=0)     移动 元素从一个列表移动到另外一个列表 可以设置超时
 # 从一个列表的右侧移除一个元素并将其添加到另一个列表的左侧
 #
 # 参数：
@@ -105,7 +105,7 @@ print(r.lrange("list2", 0, -1))
 r.brpoplpush("list1", "list2", timeout=2)
 print(r.lrange("list2", 0, -1))
 
-#13. blpop(keys, timeout)       一次移除多个列表
+# 13. blpop(keys, timeout)       一次移除多个列表
 # 将多个列表排列，按照从左到右去pop对应列表的元素
 # 参数：
 # keys - redis的name的集合
@@ -117,10 +117,11 @@ while True:
     r.blpop(["list10", "list11"], timeout=2)
     print(r.lrange("list10", 0, -1), r.lrange("list11", 0, -1))
 
-#14.自定义增量迭代
+# 14.自定义增量迭代
 # 由于redis类库中没有提供对列表元素的增量迭代，如果想要循环name对应的列表的所有元素，那么就需要获取name对应的所有列表。
 # 循环列表
 # 但是，如果列表非常大，那么就有可能在第一步时就将程序的内容撑爆，所有有必要自定义一个增量迭代的功能：
+
 
 def list_iter(name):
     """
@@ -133,11 +134,7 @@ def list_iter(name):
         yield r.lindex(name, index)
     return 0
 
+
 # 使用
-for item in list_iter('list2'): # 遍历这个列表
+for item in list_iter('list2'):  # 遍历这个列表
     print(item)
-
-
-
-
-

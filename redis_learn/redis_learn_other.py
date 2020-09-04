@@ -75,14 +75,9 @@ for i in r.zscan_iter("zset3"):
 # other 方法
 print(r.get('name'))    # 查询key为name的值
 r.delete("gender")  # 删除key为gender的键值对
-print(r.keys()) # 查询所有的Key
+print(r.keys())  # 查询所有的Key
 print(r.dbsize())   # 当前redis包含多少条数据
 r.save()    # 执行"检查点"操作，将数据写回磁盘。保存时阻塞
 # r.flushdb()        # 清空r中的所有数据
 
 # 管道（pipeline）
-
-
-
-
-
