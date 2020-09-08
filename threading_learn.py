@@ -1,5 +1,6 @@
 import threading
-import time, os
+import time
+import os
 """所谓多线程并不是多个线程一起运行，而是省去了程序进行存储所花费的时间，GIL在不同的线程直接反复横跳，当作用的线程进入I/O（即输入、输出）时，立即进行下一个线程的运算"""
 
 '''
@@ -53,13 +54,15 @@ import time, os
 '''
     自定义线程：继承threading.Thread来定义线程类，其本质是重构Thread类中的run方法
 '''
+
+
 class MyThread(threading.Thread):
-    def __init__(self,n):
-        super(MyThread,self).__init__()   #重构run函数必须写
+    def __init__(self, n):
+        super(MyThread, self).__init__()   # 重构run函数必须写
         self.n = n
 
     def run(self):
-        print('task',self.n)
+        print('task', self.n)
         time.sleep(1)
         print('2s')
         time.sleep(1)
@@ -67,6 +70,7 @@ class MyThread(threading.Thread):
         time.sleep(1)
         print('0s')
         time.sleep(1)
+
 
 if __name__ == '__main__':
     t1 = MyThread('t1')
@@ -79,7 +83,8 @@ if __name__ == '__main__':
     守护线程
     下面这个例子，这里使用setDaemon(True)把所有的子线程都变成了主线程的守护线程，
     因此当主线程结束后，子线程也会随之结束，所以当主线程结束后，整个程序就退出了。
-    所谓’线程守护’，就是主线程不管该线程的执行情况，只要是其他子线程结束且主线程执行完毕，主线程都会关闭。也就是说:主线程不等待该守护线程的执行完再去关闭。
+    所谓’线程守护’，就是主线程不管该线程的执行情况，只要是其他子线程结束且主线程执行完毕，
+    主线程都会关闭。也就是说:主线程不等待该守护线程的执行完再去关闭。
 '''
 # def run(n):
 #     print('task', n)
@@ -227,15 +232,17 @@ if __name__ == '__main__':
     那么event.wait()便不再阻塞
 '''
 event = threading.Event()
+
+
 def lighter():
     count = 0
-    event.set()         #初始者为绿灯
+    event.set()         # 初始者为绿灯
     while True:
-        if 5 < count <=10:
-            event.clear()  #红灯，清除标志位
+        if 5 < count <= 10:
+            event.clear()  # 红灯，清除标志位
             print("\33[41;lmred light is on...\033[0m]")
         elif count > 10:
-            event.set()    #绿灯，设置标志位
+            event.set()    # 绿灯，设置标志位
             count = 0
         else:
             print('\33[42;lmgreen light is on...\033[0m')
@@ -246,13 +253,13 @@ def lighter():
 
 def car(name):
     while True:
-        if event.is_set():     #判断是否设置了标志位
-            print('[%s] running.....'%name)
+        if event.is_set():     # 判断是否设置了标志位
+            print('[%s] running.....' % name)
             time.sleep(1)
         else:
-            print('[%s] sees red light,waiting...'%name)
+            print('[%s] sees red light,waiting...' % name)
             event.wait()
-            print('[%s] green light is on,start going...'%name)
+            print('[%s] green light is on,start going...' % name)
 
 
 # startTime = time.time()
@@ -290,4 +297,3 @@ car.start()
     此种情况下并不能提高性能，相反在切换多线程任务时，可能还会造成时间和资源的浪费，导致效能下降。这就是造成上面两种多线程结果不能的解释。
 结论:I/O密集型任务，建议采取多线程，还可以采用多进程+协程的方式(例如:爬虫多采用多线程处理爬取的数据)；对于计算密集型任务，python此时就不适用了。
 '''
-
